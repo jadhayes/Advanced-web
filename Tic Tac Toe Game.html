@@ -1,0 +1,63 @@
+<html>
+    <head>
+        <title> Tic Tac Toe </title>
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <style> 
+    div{
+        background-color: rgb(73, 30, 192);
+        text-align: center;
+        color: black;
+        font-family: Impact;
+    }
+    button{
+        width: 15%;
+        height: 15%;
+        font-size: 35px;
+        background-color: rgb(0 0 0 /40%);
+        color: black;
+    }
+    title{
+        font-family: Impact;
+        background-color: rgb(127, 68, 209);
+        color: azure;
+    }
+    
+  </style>
+  <script>
+    var turn="X"
+    function TicTacToe(buttonid){
+document.getElementById (buttonid).innerHTML=turn;
+document.getElementById(buttonid).disabled=true;
+if (turn=="X"){
+    turn="O"
+}
+else{
+    turn="X"
+}
+    }
+  </script>
+    </head>
+    <body>
+        <h1> Tic Tac Toe!!! </h1>
+        <div class="alert alert-warning">
+            <h1 id="turn"> Turn : X </h1>
+<button id="b1" onclick="TicTacToe('b1')"> - </button>
+<button id="b2" onclick="TicTacToe('b2')"> - </button>
+<button id="b3" onclick="TicTacToe('b3')"> - </button>
+<br>
+<button id="b4" onclick="TicTacToe('b4')"> - </button>
+<button id="b5" onclick="TicTacToe('b5')"> - </button>
+<button id="b6" onclick="TicTacToe('b6')"> - </button>
+<br>
+<button id="b7" onclick="TicTacToe('b7')"> - </button>
+<button id="b8" onclick="TicTacToe('b8')"> - </button>
+<button id="b9" onclick="TicTacToe('b9')"> -</button>
+<br>
+<h1 id="result"> </h1>
+            
+        </div>
+    </body>
+
+    </html>
