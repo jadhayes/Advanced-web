@@ -1,63 +1,210 @@
+<!DOCTYPE html>
 <html>
     <head>
         <title> Tic Tac Toe </title>
- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-  <style> 
-    div{
-        background-color: rgb(73, 30, 192);
-        text-align: center;
-        color: black;
-        font-family: Impact;
-    }
-    button{
-        width: 15%;
-        height: 15%;
-        font-size: 35px;
-        background-color: rgb(0 0 0 /40%);
-        color: black;
-    }
-    title{
-        font-family: Impact;
-        background-color: rgb(127, 68, 209);
-        color: azure;
-    }
-    
-  </style>
-  <script>
-    var turn="X"
-    function TicTacToe(buttonid){
-document.getElementById (buttonid).innerHTML=turn;
-document.getElementById(buttonid).disabled=true;
-if (turn=="X"){
-    turn="O"
-}
-else{
-    turn="X"
-}
-    }
-  </script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        <style> 
+            body {
+                background: #080808;
+                background-image: radial-gradient(circle at center, #1a0b00 0%, #000000 100%);
+                text-align: center;
+                color: #ff8c00;
+                font-family: 'Impact', sans-serif;
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0;
+            }
+
+            .game-container {
+                width: 90%;
+                max-width: 440px;
+                padding: 30px 20px;
+                background: rgba(20, 20, 20, 0.55);
+                backdrop-filter: blur(16px);
+                -webkit-backdrop-filter: blur(16px);
+                border: 1px solid rgba(255, 140, 0, 0.35);
+                border-top: 1px solid rgba(255, 180, 50, 0.6);
+                border-left: 1px solid rgba(255, 180, 50, 0.4);
+                border-radius: 24px;
+                box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8),
+                            0 0 30px rgba(255, 140, 0, 0.15),
+                            inset 0 1px 2px rgba(255, 255, 255, 0.2);
+            }
+
+            .board {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 12px;
+                margin: 25px auto;
+                max-width: 360px;
+            }
+
+            button.tic-btn {
+                width: 100%;
+                aspect-ratio: 1;
+                font-size: 42px;
+                background: rgba(255, 140, 0, 0.08);
+                backdrop-filter: blur(8px);
+                color: #ff9d00;
+                border: 1px solid rgba(255, 140, 0, 0.25);
+                border-radius: 16px;
+                cursor: pointer;
+                transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+                box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.15),
+                            0 4px 10px rgba(0, 0, 0, 0.3);
+                text-shadow: 0 0 12px rgba(255, 140, 0, 0.6);
+            }
+
+            button.tic-btn:hover:not([disabled]) {
+                background: rgba(255, 140, 0, 0.25);
+                border-color: rgba(255, 160, 0, 0.7);
+                box-shadow: 0 0 20px rgba(255, 140, 0, 0.4),
+                            inset 0 1px 2px rgba(255, 255, 255, 0.3);
+                transform: translateY(-2px);
+            }
+
+            button.tic-btn[disabled] {
+                opacity: 0.85;
+                cursor: not-allowed;
+            }
+
+            h1 {
+                font-size: 38px;
+                margin: 0 0 10px 0;
+                letter-spacing: 2px;
+                text-shadow: 0 0 15px rgba(255, 140, 0, 0.5);
+            }
+
+            #turn {
+                font-size: 24px;
+                color: #ffa500;
+                margin-top: 10px;
+                text-shadow: 0 0 8px rgba(255, 165, 0, 0.4);
+            }
+
+            #result {
+                color: #ffeb3b;
+                min-height: 40px;
+                font-size: 28px;
+                text-shadow: 0 0 10px rgba(255, 235, 59, 0.5);
+            }
+
+            .reset-btn {
+                margin-top: 15px;
+                font-family: sans-serif;
+                background-color: rgba(217, 83, 79, 0.8);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                backdrop-filter: blur(4px);
+                transition: all 0.2s;
+            }
+
+            .reset-btn:hover {
+                background-color: rgba(217, 83, 79, 1);
+                box-shadow: 0 0 15px rgba(217, 83, 79, 0.6);
+            }
+        </style>
+        <script>
+            let turn = "X";
+            let movesCount = 0;
+            let gameOver = false;
+
+            const winCombinations = [
+                ["b1", "b2", "b3"],
+                ["b4", "b5", "b6"],
+                ["b7", "b8", "b9"],
+                ["b1", "b4", "b7"],
+                ["b2", "b5", "b8"],
+                ["b3", "b6", "b9"],
+                ["b1", "b5", "b9"],
+                ["b3", "b5", "b7"]
+            ];
+
+            function TicTacToe(buttonId) {
+                if (gameOver) return;
+
+                const btn = document.getElementById(buttonId);
+                btn.innerHTML = turn;
+                btn.disabled = true;
+                movesCount++;
+
+                if (checkWin()) {
+                    document.getElementById("result").innerText = "Player " + turn + " Wins!";
+                    document.getElementById("turn").innerText = "Game Over";
+                    gameOver = true;
+                    disableAllButtons();
+                    return;
+                }
+
+                if (movesCount === 9) {
+                    document.getElementById("result").innerText = "It's a Draw!";
+                    document.getElementById("turn").innerText = "Game Over";
+                    gameOver = true;
+                    return;
+                }
+
+                // Switch turn
+                turn = (turn === "X") ? "O" : "X";
+                document.getElementById("turn").innerText = "Turn : " + turn;
+            }
+
+            function checkWin() {
+                return winCombinations.some(combination => {
+                    const [a, b, c] = combination;
+                    const valA = document.getElementById(a).innerHTML;
+                    const valB = document.getElementById(b).innerHTML;
+                    const valC = document.getElementById(c).innerHTML;
+
+                    return (valA !== "-" && valA === valB && valB === valC);
+                });
+            }
+
+            function disableAllButtons() {
+                for (let i = 1; i <= 9; i++) {
+                    document.getElementById("b" + i).disabled = true;
+                }
+            }
+
+            function resetGame() {
+                turn = "X";
+                movesCount = 0;
+                gameOver = false;
+
+                for (let i = 1; i <= 9; i++) {
+                    const btn = document.getElementById("b" + i);
+                    btn.innerHTML = "-";
+                    btn.disabled = false;
+                }
+
+                document.getElementById("turn").innerText = "Turn : X";
+                document.getElementById("result").innerText = "";
+            }
+        </script>
     </head>
     <body>
-        <h1> Tic Tac Toe!!! </h1>
-        <div class="alert alert-warning">
-            <h1 id="turn"> Turn : X </h1>
-<button id="b1" onclick="TicTacToe('b1')"> - </button>
-<button id="b2" onclick="TicTacToe('b2')"> - </button>
-<button id="b3" onclick="TicTacToe('b3')"> - </button>
-<br>
-<button id="b4" onclick="TicTacToe('b4')"> - </button>
-<button id="b5" onclick="TicTacToe('b5')"> - </button>
-<button id="b6" onclick="TicTacToe('b6')"> - </button>
-<br>
-<button id="b7" onclick="TicTacToe('b7')"> - </button>
-<button id="b8" onclick="TicTacToe('b8')"> - </button>
-<button id="b9" onclick="TicTacToe('b9')"> -</button>
-<br>
-<h1 id="result"> </h1>
+        <div class="game-container">
+            <h1>TIC TAC TOE</h1>
+            <h2 id="turn">Turn : X</h2>
             
+            <div class="board">
+                <button id="b1" class="tic-btn" onclick="TicTacToe('b1')">-</button>
+                <button id="b2" class="tic-btn" onclick="TicTacToe('b2')">-</button>
+                <button id="b3" class="tic-btn" onclick="TicTacToe('b3')">-</button>
+
+                <button id="b4" class="tic-btn" onclick="TicTacToe('b4')">-</button>
+                <button id="b5" class="tic-btn" onclick="TicTacToe('b5')">-</button>
+                <button id="b6" class="tic-btn" onclick="TicTacToe('b6')">-</button>
+
+                <button id="b7" class="tic-btn" onclick="TicTacToe('b7')">-</button>
+                <button id="b8" class="tic-btn" onclick="TicTacToe('b8')">-</button>
+                <button id="b9" class="tic-btn" onclick="TicTacToe('b9')">-</button>
+            </div>
+
+            <h2 id="result"></h2>
+            <button class="btn btn-danger reset-btn" onclick="resetGame()">Reset Game</button>
         </div>
     </body>
-
-    </html>
+</html>
