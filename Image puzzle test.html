@@ -1,0 +1,119 @@
+<html>
+    
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <title>Image Puzzle</title>
+    <style>
+        /* Consolidated box styles into a single class */
+        .grid-box {
+            width: 90px;
+            height: 90px;
+            background-color: rgb(86, 126, 86);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 3px solid rgb(0, 0, 0); 
+            /* Ensures background images fill the 90x90 box without stretching */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        /* Image bank styling */
+        .puzzle {
+            width: 90px;
+            height: 90px;
+            /* Keeps the images uniform in the selection area */
+            object-fit: cover; 
+            cursor: pointer;
+        }
+
+        .grid-box button {
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            border: none;
+            color: white;
+            font-weight: bold;
+        }
+    </style>
+    <script>
+        var buttonclickID = "";
+        var imageclickID = "";
+
+        function buttonclick(buttonId) {
+            buttonclickID = buttonId;
+            
+            // If an image was clicked first, apply it now
+            if (imageclickID !== "") {
+                var imageSrc = document.getElementById(imageclickID).src;
+                var targetBox = document.getElementById(buttonclickID);
+                
+                targetBox.style.backgroundImage = "url('" + imageSrc + "')";
+                
+                // Reset selections
+                buttonclickID = "";
+                imageclickID = "";
+            }
+        }
+
+        function imageclick(imageID) {
+            imageclickID = imageID;
+        }
+        function checkresult(){
+            var result=true;
+            var image=document.getElementById("c1").backgroundImage;
+            if( image.src==url("Images for Puzzle/Screenshot 2026-08-06 at 16.15.34.png")){
+                result=true;
+            }
+             var image=document.getElementById("c2").backgroundImage;
+            if( image.src==url("Images for Puzzle/Screenshot 2026-08-06 at 16.15.31.png")){
+                result=true;
+            }
+            
+        }
+    </script> 
+</head>
+
+<body>
+    <h1>Image Puzzle with JavaScript</h1>
+
+    <div class="row">
+        <div class="col-sm-4 grid-box" id="c1"><button onclick="buttonclick('c1')">1</button></div>
+        <div class="col-sm-4 grid-box" id="c2"><button onclick="buttonclick('c2')">2</button></div> 
+        <div class="col-sm-4 grid-box" id="c3"><button onclick="buttonclick('c3')">3</button></div> 
+    </div>
+    <div class="row">
+        <div class="col-sm-4 grid-box" id="c4"><button onclick="buttonclick('c4')">4</button></div> 
+        <div class="col-sm-4 grid-box" id="c5"><button onclick="buttonclick('c5')">5</button></div> 
+        <div class="col-sm-4 grid-box" id="c6"><button onclick="buttonclick('c6')">6</button></div> 
+    </div>
+    <div class="row">
+        <div class="col-sm-4 grid-box" id="c7"><button onclick="buttonclick('c7')">7</button></div> 
+        <div class="col-sm-4 grid-box" id="c8"><button onclick="buttonclick('c8')">8</button></div> 
+        <div class="col-sm-4 grid-box" id="c9"><button onclick="buttonclick('c9')">9</button></div> 
+    </div>
+    
+    <br><br>
+
+    <div id="puzzles">
+        <img src="Images for Puzzle/Screenshot 2026-08-06 at 16.15.26.png" class="puzzle" id="img1" onclick="imageclick('img1')">
+        <img src="Images for Puzzle/Screenshot 2026-08-06 at 16.15.23.png" class="puzzle" id="img2" onclick="imageclick('img2')">
+        <img src="Images for Puzzle/Screenshot 2026-08-06 at 16.14.49.png" class="puzzle" id="img3" onclick="imageclick('img3')">
+        <img src="Images for Puzzle/Screenshot 2026-08-06 at 16.15.04.png" class="puzzle" id="img4" onclick="imageclick('img4')">
+        <img src="Images for Puzzle/Screenshot 2026-08-06 at 16.15.34.png" class="puzzle" id="img5" onclick="imageclick('img5')">
+        <img src="Images for Puzzle/Screenshot 2026-08-06 at 16.14.44.png" class="puzzle" id="img6" onclick="imageclick('img6')">
+        <img src="Images for Puzzle/Screenshot 2026-08-06 at 16.15.17.png" class="puzzle" id="img7" onclick="imageclick('img7')">
+        <img src="Images for Puzzle/Screenshot 2026-08-06 at 16.15.20.png" class="puzzle" id="img8" onclick="imageclick('img8')">
+        <img src="Images for Puzzle/Screenshot 2026-08-06 at 16.15.31.png" class="puzzle" id="img9" onclick="imageclick('img9')">
+    </div>
+
+    <h3>Click on the image first and then the box on the puzzle to place them in the puzzle</h3>
+    <button>
+        Submit Puzzle
+    </button>
+</body>
+
+</html>
