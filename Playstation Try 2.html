@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PlayStation Store - Liquid Glass Navigation</title>
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <style>
+    /* Premium dark gaming aesthetic background */
+    body {
+      background: radial-gradient(circle at top, #131525, #08090d);
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      color: #f5f5f7;
+      overflow-x: hidden;
+    }
+
+    /* Top Sticky Global Navigation Bar Container */
+    .apple-glass-header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      width: 100%;
+      background: rgba(18, 18, 24, 0.75);
+      backdrop-filter: blur(35px) saturate(210%);
+      -webkit-backdrop-filter: blur(35px) saturate(210%);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .nav-container {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+
+    /* PlayStation Brand Logo / Icon styling */
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: -0.5px;
+      color: #fff;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+
+    .brand-logo svg {
+      width: 28px;
+      height: 28px;
+      fill: #0070d1;
+      filter: drop-shadow(0 0 6px rgba(0, 112, 209, 0.6));
+    }
+
+    /* Scrollable Tabs Wrapper for responsive overflow */
+    .liquid-tabs-scroll-wrapper {
+      position: relative;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none; /* IE/Edge */
+      flex-grow: 1;
+      margin-left: 30px;
+    }
+
+    .liquid-tabs-scroll-wrapper::-webkit-scrollbar {
+      display: none; /* Chrome/Safari */
+    }
+
+    /* Overriding Bootstrap Nav Tabs into sleek horizontal row */
+    .liquid-tabs {
+      position: relative;
+      border: none !important;
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 8px;
+      margin-bottom: 0;
+      white-space: nowrap;
+    }
+
+    .liquid-tabs .nav-item {
+      margin-bottom: 0;
+    }
+
+    /* Clean cool-white and subtle silver nav links */
+    .liquid-tabs .nav-link {
+      color: #86868b;
+      font-weight: 500;
+      font-size: 0.9rem;
+      padding: 10px 14px;
+      border: none !important;
+      background: transparent !important;
+      transition: color 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+      border-radius: 8px;
+    }
+
+    .liquid-tabs .nav-link:hover {
+      color: #e8e8ed;
+      background: rgba(255, 255, 255, 0.05) !important;
+    }
+
+    .liquid-tabs .nav-link.active {
+      color: #f5f5f7 !important;
+    }
+
+    /* Physical sliding underline indicator */
+    .tab-underline-indicator {
+      position: absolute;
+      bottom: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #0070d1, #00d2ff);
+      box-shadow: 0 0 10px rgba(0, 112, 209, 0.8);
+      transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+      border-radius: 2px;
+    }
+
+    /* Main Content Display Area */
+    .main-content-container {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    /* Liquid Glass Card Panels */
+    .apple-glass-card {
+      padding: 40px;
+      border-radius: 28px;
+      background: rgba(25, 25, 35, 0.6);
+      backdrop-filter: blur(35px) saturate(210%);
+      -webkit-backdrop-filter: blur(35px) saturate(210%);
+      box-shadow: 
+        inset 0 1px 1px rgba(255, 255, 255, 0.15),
+        inset 0 -1px 2px rgba(0, 0, 0, 0.6),
+        0 20px 50px rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    /* Toggle Panes Animation Physics */
+    .apple-panes .tab-pane {
+      display: block;
+      height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: transform 0.45s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.35s ease;
+    }
+
+    .apple-panes .tab-pane.active {
+      height: auto;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Panel Typography & Layout */
+    .panel-heading {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: -0.5px;
+      margin-bottom: 12px;
+    }
+
+    .panel-subtitle {
+      font-size: 1.05rem;
+      color: #a1a1a6;
+      line-height: 1.6;
+      margin-bottom: 30px;
+      max-width: 800px;
+    }
+
+    /* Grid Feature Cards Inside Panes */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    .feature-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 18px;
+      padding: 24px;
+      transition: transform 0.3s ease, background 0.3s ease, border-color 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(0, 112, 209, 0.4);
+    }
+
+    .feature-card h4 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #f5f5f7;
+      margin-bottom: 8px;
+    }
+
+    .feature-card p {
+      font-size: 0.9rem;
+      color: #86868b;
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    .store-btn {
+      display: inline-block;
+      padding: 8px 18px;
+      background: linear-gradient(135deg, #0070d1, #00519e);
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.85rem;
+      border-radius: 20px;
+      text-decoration: none;
+      box-shadow: 0 4px 15px rgba(0, 112, 209, 0.4);
+      transition: all 0.2s ease;
+    }
+
+    .store-btn:hover {
+      background: linear-gradient(135deg, #0082f3, #0060b5);
+      color: #fff;
+      box-shadow: 0 6px 20px rgba(0, 112, 209, 0.6);
+      transform: scale(1.02);
+    }
+    #Logo1{
+        width:30px;
+        height:30px;
+    }
+    .Playstation {
+            width: 30%;
+            animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .Playstation img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateX(99900px);
+            }
+
+            to {
+                opacity: 0.5;
+                transform: translateX(0);
+            }
+        }
+  </style>
+</head>
+<body>
+    
+
+  <header class="apple-glass-header">
+    <div class="nav-container">
+      <!-- PlayStation Brand Logo -->
+      <a href="#" class="brand-logo">
+      <img id="Logo1" src="/Users/jadhayes/PlayStation-Logo-1994.png">
+        <span>PS STORE</span>
+      </a>
+
+      <!-- Horizontal Scrollable Tabs -->
+      <div class="liquid-tabs-scroll-wrapper">
+        <div class="tab-underline-indicator"></div>
+        <ul class="nav nav-tabs liquid-tabs" id="psStoreTab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="ps5-tab" data-bs-toggle="tab" data-bs-target="#ps5-pane,#ps5-image-pane" type="button" role="tab" aria-selected="true">PS5</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="ps5pro-tab" data-bs-toggle="tab" data-bs-target="#ps5pro-pane" type="button" role="tab" aria-selected="false">PS5 Pro</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="ps4-tab" data-bs-toggle="tab" data-bs-target="#ps4-pane" type="button" role="tab" aria-selected="false">PS4</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="ps3-tab" data-bs-toggle="tab" data-bs-target="#ps3-pane" type="button" role="tab" aria-selected="false">PS3</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="ps2-tab" data-bs-toggle="tab" data-bs-target="#ps2-pane" type="button" role="tab" aria-selected="false">PS2</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="ps1-tab" data-bs-toggle="tab" data-bs-target="#ps1-pane" type="button" role="tab" aria-selected="false">PS1</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="handhelds-tab" data-bs-toggle="tab" data-bs-target="#handhelds-pane" type="button" role="tab" aria-selected="false">Handhelds</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="psvr-tab" data-bs-toggle="tab" data-bs-target="#psvr-pane" type="button" role="tab" aria-selected="false">PS VR</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="accessories-tab" data-bs-toggle="tab" data-bs-target="#accessories-pane" type="button" role="tab" aria-selected="false">Accessories</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="controllers-tab" data-bs-toggle="tab" data-bs-target="#controllers-pane" type="button" role="tab" aria-selected="false">Controllers</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content-container">
+    <div class="apple-glass-card">
+      <div class="tab-content apple-panes" id="psStoreTabContent">
+        
+        <!-- 1. PS5 Pane -->
+        <div class="tab-pane fade show active" id="ps5-pane" role="tabpanel" tabindex="0">
+          <h2 class="panel-heading">PlayStation™</h2>
+          <p class="panel-subtitle">Experience lightning-fast loading with an ultra-high speed SSD, deeper immersion with support for haptic feedback, adaptive triggers, and 3D Audio.</p>
+          <div class="feature-grid">
+            <div class="feature-card">
+              <h4>Marvel's Spider-Man 2</h4>
+              <p>Swing across Marvel's New York with faster swinging speeds and web wings.</p>
+              <a href="https://www.playstation.com/en-gb/ps5/1-tb-disc/product/PSD001-PSDE01929_59-PS5CONSOLEHB2OYE/" class="store-btn">Explore Game</a>
+            </div>
+            <div class="feature-card">
+              <h4>God of War Ragnarök</h4>
+              <p>Embark on an epic and heartfelt journey as Kratos and Atreus struggle with holding on and letting go.</p>
+              <a href="#" class="store-btn">Explore Game</a>
+            </div>
+            <div class="feature-card">
+              <h4>Helldivers 2</h4>
+              <p>Join the galaxy's last line of offense and fight for freedom across a hostile alien galaxy.</p>
+              <a href="#" class="store-btn">Explore Game</a>
+            </div>
+          </div>
+        </div>
+        <br>
+        <br>
+        <!--PS5IMAGESPANEL-->
+         <div class="tab-pane fade show active" id="ps5-image-pane" role="tabpanel" tabindex="0">
+          <h2 class="panel-heading">Buy a PlayStation 5™</h2>
+          <p class="panel-subtitle">Chose from over 10 Different unique PS5™ consoles</p>
+          <div class="feature-grid">
+            <div class="feature-image1">
+              <h4>PS5 standard edition </h4>
+              <p>This is the base PS5™ with immersive graphics and a powerful chip. Included in the box is a power cable, HDMI-HDMI cable, USB-C cable, DualSense wireless controler, Astros Playroom Pre installed game and PlayStation 5™ console with disk drive. </p>
+              <a href="#" class="store-btn">Buy now</a>
+            </div>
+            <div class="feature-image2">
+              <h4>God of War Ragnarök</h4>
+              <p>Embark on an epic and heartfelt journey as Kratos and Atreus struggle with holding on and letting go.</p>
+              <a href="#" class="store-btn">Explore Game</a>
+            </div>
+            <div class="feature-image3">
+              <h4>Helldivers 2</h4>
+              <p>Join the galaxy's last line of offense and fight for freedom across a hostile alien galaxy.</p>
+              <a href="#" class="store-btn">Explore Game</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. PS5 Pro Pane -->
+        <div class="tab-pane fade" id="ps5pro-pane" role="tabpanel" tabindex="0">
+          <h2 class="panel-heading">PlayStation 5 Pro</h2>
+          <p class="panel-subtitle">The most advanced console gaming architecture featuring upgraded GPU, advanced ray tracing, and PlayStation Spectral Super Resolution (PSSR).</p>
+          <div class="feature-grid">
+            <div class="feature-card">
+              <h4>Pro Enhanced Library</h4>
+              <p>Play top titles at 60fps or 120fps with uncompromised clarity and high-fidelity ray tracing.</p>
+              <a href="#" class="store-btn">View Enchanced Titles</a>
+            </div>
+            <div class="feature-card">
+              <h4>2TB High-Speed SSD</h4>
+              <p>Double the storage capacity to keep your favorite games loaded and ready to launch instantly.</p>
+              <a href="#" class="store-btn">Learn More</a>
+            </div>
+            <div class="feature-card">
+              <h4>Wi-Fi 7 Integration</h4>
+              <p>Next-generation wireless networking for lower latency and lightning-fast downloads.</p>
+              <a href="#" class="store-btn">Check Specs</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. PS4 Pane -->
+        <div class="tab-pane fade" id="ps4-pane" role="tabpanel" tabindex="0">
+          <h2 class="panel-heading">PlayStation 4</h2>
+          <p class="panel-subtitle">Explore a massive catalog of blockbuster games, genre-defining hits, and legendary adventures that shaped modern gaming.</p>
+          <div class="feature-grid">
+            <div class="feature-card">
+              <h4>Bloodborne</h4>
+              <p>Uncover the terrifying secrets of the ancient city of Yharnam in this dark action RPG classic.</p>
+              <a href="#" class="store-btn">Explore Game</a>
+            </div>
+            <div class="feature-card">
+              <h4>The Last of Us Part II</h4>
+              <p>Experience the devastating emotional consequences of Ellie's relentless quest for vengeance.</p>
+              <a href="#" class="store-btn">Explore Game</a>
+            </div>
+            <div class="feature-card">
+              <h4>Uncharted 4: A Thief's End</h4>
+              <p>Nathan Drake embarks on a globe-trotting pursuit of a historical pirate treasure.</p>
+              <a href="#" class="store-btn">Explore Game</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. PS3 Pane -->
+        <div class="tab-pane fade" id="ps3-pane" role="tabpanel" tabindex="0">
+          <h2 class="panel-heading">PlayStation 3</h2>
+          <p class="panel-subtitle">Revisit the revolutionary Cell Broadband Engine era that introduced industry-defining trilogies, cinematic storytelling, and online multiplayer.</p>
+          <div class="feature-grid">
+            <div class="feature-card">
+              <h4>Metal Gear Solid 4</h4>
+              <p>Witness Solid Snake's final mission across war-torn global hot zones.</p>
+              <a href="#" class="store-btn">View Classic</a>
+            </div>
+            <div class="feature-card">
+              <h4>Demon's Souls (Original)</h4>
+              <p>The dark fantasy masterpiece that spawned an entire generation of challenging action RPGs.</p>
+              <a href="#" class="store-btn">View Classic</a>
+            </div>
+            <div class="feature-card">
+              <h4>Infamous Collection</h4>
+              <p>Wield incredible electrical superpower choices in an open-world sandbox environment.</p>
+              <a href="#" class="store-btn">View Classic</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. PS2 Pane -->
+        <div class="tab-pane fade" id="ps2-pane" role="tabpanel" tabindex="0">
+          <h2 class="panel-heading">PlayStation 2 Classics</h2>
+          <p class="panel-subtitle">Celebrate the best-selling console of all time with timeless masterpieces brought back with trophy support and enhanced rendering.</p>
+          <div class="feature-grid">
+            <div class="feature-card">
+              <h4>Grand Theft Auto: San Andreas</h4>
+              <p>Step into early '90s state-wide chaos with CJ in a sprawling open world.</p>
+              <a href="#" class="store-btn">Play Retro</a>
+            </div>
+            <div class="feature-card">
+              <h4>Shadow of the Colossus</h4>
+              <p>Traverse a forbidden land and defeat 16 majestic giant beasts to restore life.</p>
+              <a href="#" class="store-btn">Play Retro</a>
+            </div>
+            <div class="feature-card">
+              <h4>Final Fantasy X</h4>
+              <p>Embark on a pilgrimage to defeat Sin and save the world of Spira.</p>
+              <a href="#" class="store-btn">Play Retro</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. PS1 Pane -->
+        <div class="tab-pane fade" id="ps1-pane" role="tabpanel" tabindex="0">
+          <h2 class="panel-heading">PlayStation 1 Classics</h2>
+          <p class="panel-subtitle">The 32-bit revolution that started it all. Experience nostalgic polygonal graphics, iconic soundtracks, and genre-defining milestones.</p>
+          <div class="feature-grid">
+            <div class="feature-card">
+              <h4>Tekken 3</h4>
+              <p>The legendary fighting game tournament featuring buttery smooth character animations.</p>
+              <a href="#" class="store-btn">Discover Classic</a>
+            </div>
+            <div class="feature-card">
+              <h4>Resident Evil Director's Cut</h4>
+              <p>Survive the horrors lurking inside the infamous Spencer Mansion.</p>
+              <a href="#" class="store-btn">Discover Classic</a>
+            </div>
+            <div class="feature-card">
+              <h4>Silent Hill</h4>
+              <p>Search for your lost daughter in the fog-drenched, nightmarish town.</p>
+              <a href="#" class="store-btn">Discover Classic</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7. Handhelds Pane -->
+        <div class="tab-pane fade" id="handhelds-pane" role="tabpanel" tabindex="0">
+          <h2 class="panel-heading">PlayStation Handhelds</h2>
+          <p class="panel-subtitle">Dedicated portable gaming hardware engineered to deliver console-quality adventures on the move, including PSP and PlayStation Vita.</p>
+          <div class="feature-grid">
+            <div class="feature-card">
+              <h4>PSP Essentials</h4>
+              <p>Relive portable hits like Daxter, God of War: Chains of Olympus, and Crisis Core.</p>
+              <a href="#" class="store-btn">Browse Library</a>
+            </div>
+            <div class="feature-card">
+              <h4>PS Vita Classics</h4>
+              <p>Dual analog stick portability featuring OLED display gems like Persona 4 Golden.</p>
+              <a href="#" class="store-btn">Browse Library</a>
+            </div>
+            <div class="feature-card">
+              <h4>PlayStation Portal</h4>
+              <p>Stream your PS5 games right in the palm of your hands over Wi-Fi.</p>
+              <a href="#" class="store-btn">View Hardware</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 8. PS VR Pane -->
+        <div class="tab-pane fade" id="psvr-pane" role="tabpanel" tabindex="0">
+          <h2 class="panel-heading">PlayStation VR & VR2</h2>
+          <p class="panel-subtitle">Feel a new dimension of gaming with 4K HDR visuals, eye tracking, headset feedback, and tempest 3D audio technology.</p>
+          <div class="feature-grid">
+            <div class="feature-card">
+              <h4>Horizon Call of the Mountain</h4>
+              <p>Climb majestic peaks and battle towering machine beasts in stunning virtual reality.</p>
+              <a href="#" class="store-btn">Explore VR</a>
+            </div>
+            <div class="feature-card">
+              <h4>Gran Turismo 7 VR Mode</h4>
+              <p>Sit inside the cockpit of world-class racing machines with breathtaking depth perception.</p>
+              <a href="#" class="store-btn">Explore VR</a>
+            </div>
+            <div class="feature-card">
+              <h4>Resident Evil Village VR</h4>
+              <p>Immerse yourself directly inside castle Dimitrescu for maximum survival terror.</p>
+              <a href="#" class="store-btn">Explore VR</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 9. Accessories Pane -->
+        <div class="tab-pane fade" id="accessories-pane" role="tabpanel" tabindex="0">
+          <h2 class="panel-heading">PlayStation Accessories</h2>
+          <p class="panel-subtitle">Enhance your gaming setup with official charging stations, pulse audio gear, camera peripherals, and custom console covers.</p>
+          <div class="feature-grid">
+            <div class="feature-card">
+              <h4>PULSE Elite Wireless Headset</h4>
+              <p>Lifelike gaming audio with planar magnetic drivers and AI-powered noise rejection.</p>
+              <a href="#" class="store-btn">Shop Gear</a>
+            </div>
+            <div class="feature-card">
+              <h4>DualSense Charging Station</h4>
+              <p>Click-in dock design to keep your controllers fully powered up without dangling cables.</p>
+              <a href="#" class="store-btn">Shop Gear</a>
+            </div>
+            <div class="feature-card">
+              <h4>PS5 Console Covers</h4>
+              <p>Personalize your entertainment center with sleek metallic colorway panels.</p>
+              <a href="#" class="store-btn">Shop Gear</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 10. Controllers Pane -->
+        <div class="tab-pane fade" id="controllers-pane" role="tabpanel" tabindex="0">
+          <h2 class="panel-heading">Controllers & Gamepads</h2>
+          <p class="panel-subtitle">Discover precision input devices engineered for maximum ergonomics, customizable controls, and immersive tactile feedback.</p>
+          <div class="feature-grid">
+            <div class="feature-card">
+              <h4>DualSense Edge Wireless Controller</h4>
+              <p>High-performance pro controller featuring swappable stick modules and back buttons.</p>
+              <a href="#" class="store-btn">Customize Now</a>
+            </div>
+            <div class="feature-card">
+              <h4>DualSense Wireless Controller</h4>
+              <p>Standard editions available in multiple vibrant colors including Cobalt Blue and Volcanic Red.</p>
+              <a href="#" class="store-btn">View Colors</a>
+            </div>
+            <div class="feature-card">
+              <h4>Access Controller for PS5</h4>
+              <p>Highly customizable accessibility kit designed to help players play more comfortably.</p>
+              <a href="#" class="store-btn">Learn More</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const tabs = document.querySelectorAll('#psStoreTab .nav-link');
+      const indicator = document.querySelector('.tab-underline-indicator');
+      const scrollWrapper = document.querySelector('.liquid-tabs-scroll-wrapper');
+
+      // Updates sliding indicator width and position under active tab
+      function updateIndicator(activeTab) {
+        if (!activeTab) return;
+        const tabLeft = activeTab.offsetLeft;
+        const tabWidth = activeTab.offsetWidth;
+        
+        indicator.style.width = `${tabWidth}px`;
+        indicator.style.left = `${tabLeft}px`;
+
+        // Smooth scroll tab into view if overflowing on smaller screens
+        scrollWrapper.scrollTo({
+          left: tabLeft - scrollWrapper.offsetWidth / 2 + tabWidth / 2,
+          behavior: 'smooth'
+        });
+      }
+
+      // Initialize on load
+      const defaultActive = document.querySelector('#psStoreTab .nav-link.active');
+      updateIndicator(defaultActive);
+
+      // Window resize listener
+      window.addEventListener('resize', () => {
+        const currentActive = document.querySelector('#psStoreTab .nav-link.active');
+        updateIndicator(currentActive);
+      });
+
+      // Update indicator when Bootstrap switches tab state
+      tabs.forEach(tab => {
+        tab.addEventListener('shown.bs.tab', (event) => {
+          updateIndicator(event.target);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
