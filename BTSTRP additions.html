@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title> 
+        bootstrap additions                                                                                                                        
+    </title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <style>
+    #main {
+        text-align: center;
+        background-color: black;
+        color: rgb(228, 148, 0);
+        font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+        padding: 50px;
+    }
+    
+    /* Center the dropdown container and the menu */
+    .dropdown {
+        display: inline-block;
+        position: relative;
+    }
+
+    .dropdown-menu {
+        left: 50%;
+        right: auto;
+        text-align: center;
+        transform: translateX(-50%);
+        background-color: #222; /* Optional: background for better visibility */
+        border: 1px solid rgb(228, 148, 0);
+    }
+
+    .dropdown-menu > a {
+        display: block;
+        padding: 8px 20px;
+        color: rgb(228, 148, 0);
+        text-decoration: none;
+    }
+
+    .dropdown-menu > a:hover {
+        background-color: rgb(228, 148, 0);
+        color: black;
+    }
+  </style>
+</head>
+<body>
+    <div id="main">
+        <h1>BOOTSTRAP ADDITIONS</h1>
+        <div class="dropdown">
+            <button id="button1" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">PlayStation <span class="caret"></span></button>
+            <br><br>
+            <div class="dropdown-menu" aria-labelledby="button1">
+                <a href="https://www.playstation.com/en-gb/ps5/1-tb-disc/product/PSD001-PSDE01929_59-PS5CONSOLEHB2OYE/">PlayStation 5</a>
+                <a href="https://www.playstation.com/en-gb/accessories/playstation-portal-remote-player/buy-now/">PlayStation Portal</a>
+                <a href="https://www.playstation.com/en-gb/accessories/ps-vr2/buy-now/">PlayStation VR 2</a>
+                <a href="https://www.playstation.com/en-gb/accessories/controllers/shop-all/">PlayStation Dualsense</a>
+            </div>
+        </div>
+        <button id="alert-modal" data-toggle="modal" data-target="#hello">
+          dont click
+        </button>
+        <div class="modal fade "id="hello">
+            <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Modal Header</h4>
+        </div>
+        <div class="modal-body">
+          <p>Some text in the modal.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+        </div>
+    </div>
+</body>
+</html>
